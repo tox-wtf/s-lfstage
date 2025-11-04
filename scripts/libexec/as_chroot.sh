@@ -380,9 +380,11 @@ rm -rf /usr/share/{man,info,doc}/*
 _del=(
     base32
     bits # TODO: Figure out what even provides this lol
+    bomtool
     chcon # selinux
     chmem
     choom
+    chpasswd
     chrt # this isn't a realtime system
     cksum
     corelist
@@ -391,9 +393,16 @@ _del=(
     hexdump
     df
     dmesg # it isn't useful in a stage 2
+    elfedit
+    free
+    fuser
     gawkbug
+    gcov*
+    gprof
+    groups
     gzexe
     instmodsh
+    killall{,5}
     libnetcfg
     logname # similar to whoami, kinda useless
     look
@@ -404,7 +413,10 @@ _del=(
     lslogins
     lslocks
     lsns
+    lspci
     lto-dump # huge (42M) binary that I probably dont need
+    makedb
+    mtrace
     namei
     nice
     nsenter
@@ -412,12 +424,17 @@ _del=(
     perl{bug,thanks}
     piconv
     pipesz
+    pipe_progress
+    pldd
     pr
     pydoc{,3}*
     renice # not needed in a stage 2
     runcon # selinux
     tzselect
+    uevent
+    uptime
     vdir
+    watch
     wdctl
     xzcat
     xzcmp
@@ -434,6 +451,8 @@ _del=(
     zforce
     zless
     znew
+    zstdgrep
+    zstdless
 )
 
 # Remove unnecessary binaries
@@ -447,8 +466,7 @@ rm -vf /usr/bin/idle3*
 rm -rf /usr/lib/python3.*/idlelib
 
 # remove stray readmes, batch scripts, and libtool archives
-find / -type f \
-    ! -path '/proc/*'           \
+find /usr /var /etc -type f     \
     \(                          \
         -iname 'readme*'        \
         -o -iname '*.bat'       \
