@@ -112,7 +112,7 @@ make DESTDIR="$LFS" install
 pre binutils
 
 patch << '.'
---- ltmain.sh.orig
+--- ltmain.sh
 +++ ltmain.sh
 @@ -6031 +6031 @@
 -		    add_dir="$add_dir -L$inst_prefix_dir$libdir"
@@ -151,8 +151,7 @@ mv -v gmp-[0-9]* gmp
 tar -xf ../mpc-[0-9]*.tar.gz
 mv -v mpc-[0-9]* mpc
 
-sed -e '/m64=/s/lib64/lib/' \
-    -i.orig gcc/config/i386/t-linux64
+sed -i '/m64=/s/lib64/lib/' gcc/config/i386/t-linux64
 
 # TODO: Conclude whether this is necessary to patch the default interpreter
 sed -i 's,/lib64/ld-linux,/usr/lib/ld-linux,g' gcc/config/i386/linux64.h

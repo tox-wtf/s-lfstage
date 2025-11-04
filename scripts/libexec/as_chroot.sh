@@ -448,28 +448,30 @@ rm -rf /usr/lib/python3.*/idlelib
 
 # remove stray readmes, batch scripts, and libtool archives
 find / -type f \
-    ! -path '/proc/*' \
-    -iname 'readme*' -o \
-    -iname '*.bat' -o \
-    -iname '*.la' \
+    ! -path '/proc/*'           \
+    \(                          \
+        -iname 'readme*'        \
+        -o -iname '*.bat'       \
+        -o -iname '*.la'        \
+    \)                          \
     -exec rm -vf {} +
 
 # remove uncommon character encodings
 # (utf8 is built into glibc)
-find /usr/lib/gconv -type f  \
-    -mindepth 1              \
-    ! -iname 'ISO8859-1.so'   \
-    ! -iname 'UTF-16.so'      \
-    ! -iname 'UTF-32.so'      \
-    ! -iname 'gconv-modules*' \
+find /usr/lib/gconv -type f     \
+    -mindepth 1                 \
+    ! -iname 'ISO8859-1.so'     \
+    ! -iname 'UTF-16.so'        \
+    ! -iname 'UTF-32.so'        \
+    ! -iname 'gconv-modules*'   \
     -exec rm -vf {} +
 
 # remove unused locales
-find /usr/{share,lib}/locale \
-    -mindepth 1              \
-    -type d                  \
-    ! -iname 'en_US*'         \
-    ! -iname 'C.utf8'         \
+find /usr/{share,lib}/locale    \
+    -mindepth 1                 \
+    -type d                     \
+    ! -iname 'en_US*'           \
+    ! -iname 'C.utf8'           \
     -exec rm -rvf {} +
 
 # remove unused terminfo files
