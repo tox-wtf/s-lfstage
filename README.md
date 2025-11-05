@@ -1,6 +1,6 @@
 # to-lfstage
 
-## [LFStage](https://github.com/toxikuu/lfstage) profile for [to](https://github.com/toxikuu/to).
+## [LFStage](https://github.com/tox-wtf/lfstage) profile for [to](https://github.com/tox-wtf/to).
 
 This is a minimal profile used by `to` to build packages. Note that this depends
 on bubblewrap at build time.
