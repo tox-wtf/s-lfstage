@@ -367,6 +367,10 @@ rm -vf /build.env
 # Remove documentation
 rm -rf /usr/share/{man,info,doc}/*
 
+# Remove toolchain binaries
+# TODO: See if these are needed for stage 3 toolchain
+rm -vf /usr/bin/x86_64-lfs-linux-gnu-*
+
 # remove unused binaries and scripts
 # TODO: Look into:
 # - stty
@@ -398,9 +402,11 @@ _del=(
     fuser
     gawkbug
     gcov*
+    getent
     gprof
     groups
     gzexe
+    iconvconfig
     instmodsh
     killall{,5}
     libnetcfg
@@ -421,6 +427,7 @@ _del=(
     nice
     nsenter
     pathchk
+    pcprofiledump
     perl{bug,thanks}
     piconv
     pipesz
@@ -430,6 +437,8 @@ _del=(
     pydoc{,3}*
     renice # not needed in a stage 2
     runcon # selinux
+    sprof
+    timeout
     tzselect
     uevent
     uptime
