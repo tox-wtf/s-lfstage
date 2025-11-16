@@ -14,14 +14,19 @@ pre binutils
 mkdir -v build
 cd       build
 
-../configure --prefix="$LFS/tools" \
-             --with-sysroot="$LFS" \
-             --target="$LFS_TGT"   \
-             --sbindir=/bin        \
-             --disable-nls         \
-             --enable-gprofng=no   \
-             --disable-werror      \
-             --enable-new-dtags    \
+../configure --prefix="$LFS/tools"              \
+             --with-sysroot="$LFS"              \
+             --target="$LFS_TGT"                \
+             --sbindir=/bin                     \
+             --disable-nls                      \
+             --disable-gdb                      \
+             --disable-gdbserver                \
+             --disable-libdecnumber             \
+             --disable-readline                 \
+             --disable-sim                      \
+             --enable-gprofng=no                \
+             --disable-werror                   \
+             --enable-new-dtags                 \
              --enable-default-hash-style=gnu
 make
 make install
@@ -30,12 +35,12 @@ make install
 # GCC - Pass 1
 pre gcc
 
-tar -xf ../mpfr-[0-9]*.tar.xz
-mv -v mpfr-[0-9]* mpfr
-tar -xf ../gmp-[0-9]*.tar.xz
-mv -v gmp-[0-9]* gmp
-tar -xf ../mpc-[0-9]*.tar.gz
-mv -v mpc-[0-9]* mpc
+tar -xf ../mpfr-[0-9]*.tar.?z
+mv -vf mpfr-[0-9]* mpfr
+tar -xf ../gmp-[0-9]*.tar.?z
+mv -vf gmp-[0-9]* gmp
+tar -xf ../mpc-[0-9]*.tar.?z
+mv -vf mpc-[0-9]* mpc
 
 sed -i '/m64=/s/lib64/lib/' gcc/config/i386/t-linux64
 
@@ -90,16 +95,20 @@ pre glibc
 mkdir -v build
 cd       build
 
-# shellcheck disable=2155
-printf "rootsbindir=/usr/bin\nsbindir=/usr/bin\n" > configparms
-../configure                    \
-      --prefix=/usr             \
-      --host="$LFS_TGT"         \
-      --build="$LFS_BLD"        \
-      --disable-nscd            \
-      libc_cv_slibdir=/usr/lib  \
-      libc_cv_rtlddir=/usr/lib  \
+cat > configparms << .
+rootsbindir=/usr/bin
+sbindir=/usr/bin
+.
+
+../configure                        \
+      --prefix=/usr                 \
+      --host="$LFS_TGT"             \
+      --build="$LFS_BLD"            \
+      --disable-nscd                \
+      libc_cv_slibdir=/usr/lib      \
+      libc_cv_rtlddir=/usr/lib      \
       --enable-kernel=6.12
+
 make
 make DESTDIR="$LFS" install
 

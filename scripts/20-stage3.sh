@@ -18,10 +18,12 @@ find "$LFS/usr" -type f -executable | while read -r elf; do
     fi
 done
 
-# TODO: Add $ENVS as a variable in lfstage
-cp -vf "$SCRIPT_DIR/../envs/build.env" "$LFS/build.env"
+# TODO: Add $SCRIPTS as a variable in lfstage instead of doing $SCRIPT_DIR
+# shenanigans
+cp -vf "$ENVS/build.env" "$LFS/build.env"
 install -vm755 "$SCRIPT_DIR/libexec/as_chroot.sh" "$LFS/as_chroot.sh"
 
+# TODO: See if /sys and /run should be created
 bwrap \
     --bind "$LFS" /                         \
     --dev-bind /dev /dev                    \
@@ -30,6 +32,8 @@ bwrap \
     --clearenv                              \
     --setenv TERM xterm-256color            \
     --setenv HOME /home/_                   \
+    --setenv PATH /usr/bin:/usr/sbin        \
+    --setenv MAKEFLAGS "-j$(nproc)"         \
     --chdir /                               \
     /as_chroot.sh
 
@@ -39,4 +43,5 @@ msg "Exited LFS chroot"
 if [[ ! -e "$LFS/good" ]]; then
     die "Detected a failure in LFS chroot"
 fi
+
 rm -vf "$LFS/good"

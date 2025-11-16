@@ -11,8 +11,6 @@ cd     "$LFS/sources"
 # M4
 pre m4
 
-sed 's/\[\[__nodiscard__]]//' -i lib/config.hin
-
 ./configure --prefix=/usr       \
             --host="$LFS_TGT"   \
             --build="$LFS_BLD"  \
@@ -23,77 +21,172 @@ make
 make DESTDIR="$LFS" install
 
 
-# Netbsd-curses
-pre netbsd-curses
+# Ncurses
+pre ncurses
 
-make CFLAGS="$CFLAGS" CC=gcc LDFLAGS="$LDFLAGS" PREFIX=/usr
-make CFLAGS="$CFLAGS" CC=gcc LDFLAGS="$LDFLAGS" PREFIX=/usr DESTDIR=$LFS install
+mkdir build
+pushd build
+    ../configure --prefix="$LFS/tools" AWK=gawk
+    make -C include
+    make -C progs tic
+    install -vDm755 progs/tic -t "$LFS/tools/bin/"
+popd
 
-rm -vf "$LFS"/usr/lib/lib{panel,terminfo,menuw,curses,form,formw,panelw,menu,termcap,ncursesw,ncurses}.a
+./configure --prefix=/usr                   \
+            --host="$LFS_TGT"               \
+            --build="$LFS_BLD"              \
+            --mandir=/usr/share/man         \
+            --with-manpage-format=normal    \
+            --with-shared                   \
+            --without-normal                \
+            --with-cxx-shared               \
+            --without-tests                 \
+            --without-debug                 \
+            --without-profile               \
+            --without-ada                   \
+            --disable-stripping             \
+            --disable-nls                   \
+            --disable-rpath                 \
+            --disable-home-terminfo         \
+            AWK=gawk
 
-
-# Mksh
-pre mksh
-
-sh Build.sh -r
-install -vDm755 mksh -t "$LFS/usr/bin/"
-ln -sv mksh "$LFS/usr/bin/sh"
-
-
-# Busybox
-pre busybox
-
-# Fix a bug in the menuconfig make target
-sed -i 's,^main() ,int &,' scripts/kconfig/lxdialog/check-lxdialog.sh
-
-cp -vf ../bb-conf .config
 make
+make DESTDIR="$LFS" install
+ln -sv libncursesw.so "$LFS/usr/lib/libncurses.so"
+sed -i 's/^#if.*XOPEN.*$/#if 1/' "$LFS/usr/include/curses.h"
 
-install -vDm755 busybox -t "$LFS/usr/bin/"
+
+# Bash
+pre bash
+
+./configure --prefix=/usr           \
+            --host="$LFS_TGT"       \
+            --build="$LFS_BLD"      \
+            --disable-nls           \
+            --disable-rpath         \
+            --without-bash-malloc   \
+            --disable-bang-history
+
+make
+make DESTDIR="$LFS" install
+ln -sv bash "$LFS/usr/bin/sh"
+
+
+# Coreutils
+pre coreutils
+
+./configure --prefix=/usr                     \
+            --host="$LFS_TGT"                 \
+            --build="$LFS_BLD"                \
+            --disable-assert                  \
+            --disable-rpath                   \
+            --disable-nls                     \
+            --enable-install-program=hostname \
+            --enable-no-install-program=kill,uptime
+            # --enable-no-install-program=arch,kill,uptime,base32,b2sum,basenc,chcon,cksum,comm,csplit,dd,df,dir,dircolors,expand,factor,false,fmt,fold,groups,hostid,join,link,logname,md5sum,nice,nl,nohup,numfmt,paste,pathchk,pinky,pr,ptx,runcon,sha224sum,sha384sum,shred,split,stdbuf,stty,sync,timeout,true,truncate,tsort,tty,unexpand,unlink,users,vdir,who,whoami
+
+make
+make DESTDIR="$LFS" install
+
+
+# Diffutils
+pre diffutils
+
+./configure --prefix=/usr       \
+            --host="$LFS_TGT"   \
+            --build="$LFS_BLD"  \
+            --disable-nls       \
+            --disable-rpath     \
+            gl_cv_func_strcasecmp_works=y
+
+make
+make DESTDIR="$LFS" install
 
 
 # File
-# pre file
-#
-# _cfg=(
-#     --disable-libseccomp
-#     --disable-zlib
-#     --disable-bzlib
-#     --disable-xzlib
-#     --disable-lzlib
-#     --disable-zstdlib
-#     --disable-lrziplib
-#     --disable-shared
-#     --disable-static
-# )
-#
-# mkdir -v build
-# cd build
-#     ../configure "${_cfg[@]}"
-#     make
-# cd ..
-#
-# ./configure "${_cfg[@]}"    \
-#     --prefix=/usr           \
-#     --host="$LFS_TGT"       \
-#     --build="$LFS_BLD"      \
-#     --enable-shared         \
-#     --datadir=/usr/share/file
-#
-# unset _cfg
-#
-# make FILE_COMPILE="$(pwd)/build/src/file"
-# make DESTDIR="$LFS" install
-# rm -vf "$LFS/usr/lib/libmagic.la"
+pre file
+
+_cfg=(
+    --disable-libseccomp
+    --disable-zlib
+    --disable-bzlib
+    --disable-xzlib
+    --disable-lzlib
+    --disable-zstdlib
+    --disable-lrziplib
+    --disable-shared
+    --disable-static
+)
+
+mkdir -v build
+cd build
+    ../configure "${_cfg[@]}"
+    make
+cd ..
+
+./configure "${_cfg[@]}"    \
+    --prefix=/usr           \
+    --host="$LFS_TGT"       \
+    --build="$LFS_BLD"      \
+    --enable-shared         \
+    --datadir=/usr/share/file
+
+unset _cfg
+
+make FILE_COMPILE="$(pwd)/build/src/file"
+make DESTDIR="$LFS" install
+rm -vf "$LFS/usr/lib/libmagic.la"
 
 
-# Pigz
-# pre pigz
-#
-# # TODO:
-# ./configure --prefix=/usr --host="$LFS_TGT"
-# make
-# make DESTDIR="$LFS" install
+# Findutils
+pre findutils
+
+./configure --prefix=/usr                   \
+            --host="$LFS_TGT"               \
+            --build="$LFS_BLD"              \
+            --disable-assert                \
+            --disable-nls                   \
+            --disable-rpath                 \
+            --localstatedir=/var/lib/locate
+
+make
+make DESTDIR="$LFS" install
+
+
+# Gawk
+pre gawk
+
+sed -i 's/extras//' Makefile.in
+./configure --prefix=/usr           \
+            --host="$LFS_TGT"       \
+            --build="$LFS_BLD"      \
+            --disable-nls           \
+            --disable-rpath
+
+make
+make DESTDIR=$LFS install
+
+
+# Grep
+pre grep
+
+./configure --prefix=/usr       \
+            --host="$LFS_TGT"   \
+            --build="$LFS_BLD"  \
+            --disable-nls       \
+            --disable-rpath     \
+            --disable-assert
+
+make
+make DESTDIR=$LFS install
+
+
+# Gzip
+pre gzip
+
+./configure --prefix=/usr --host="$LFS_TGT"
+make
+make DESTDIR="$LFS" install
 
 
 # Make
@@ -104,39 +197,105 @@ pre make
             --build="$LFS_BLD"  \
             --disable-nls       \
             --disable-rpath
+
 make
 make DESTDIR="$LFS" install
+
+
+# Patch
+pre patch
+
+./configure --prefix=/usr       \
+            --host="$LFS_TGT"   \
+            --build="$LFS_BLD"
+
+make
+make DESTDIR="$LFS" install
+
+
+# Sed
+pre sed
+
+./configure --prefix=/usr       \
+            --host="$LFS_TGT"   \
+            --build="$LFS_BLD"  \
+            --disable-acl       \
+            --disable-i18n      \
+            --disable-assert    \
+            --disable-nls       \
+            --disable-rpath
+
+make
+make DESTDIR="$LFS" install
+
+
+# Tar
+pre tar
+
+./configure --prefix=/usr           \
+            --host="$LFS_TGT"       \
+            --build="$LFS_BLD"      \
+            --disable-acl           \
+            --disable-nls           \
+            --disable-rpath
+
+make
+make DESTDIR="$LFS" install
+
+
+# Xz
+pre xz
+
+./configure --prefix=/usr           \
+            --host="$LFS_TGT"       \
+            --build="$LFS_BLD"      \
+            --disable-microlzma     \
+            --disable-lzip-decoder  \
+            --enable-small          \
+            --enable-threads=posix  \
+            --disable-lzmadec       \
+            --disable-lzmainfo      \
+            --disable-lzma-links    \
+            --disable-scripts       \
+            --disable-doc           \
+            --disable-nls           \
+            --disable-rpath         \
+            --disable-static
+
+make
+make DESTDIR="$LFS" install
+rm -v "$LFS/usr/lib/liblzma.la"
 
 
 # Binutils - Pass 2
 pre binutils
 
-patch << '.'
---- ltmain.sh
-+++ ltmain.sh
-@@ -6031 +6031 @@
--		    add_dir="$add_dir -L$inst_prefix_dir$libdir"
-+		    add_dir="-L$inst_prefix_dir$libdir"
-.
+sed -i '6031s/$add_dir//' ltmain.sh
 
 mkdir -v build
 cd       build
 
-../configure            \
-    --prefix=/usr       \
-    --build="$LFS_BLD"  \
-    --host="$LFS_TGT"   \
-    --disable-nls       \
-    --enable-shared     \
-    --disable-gprofng   \
-    --disable-werror    \
-    --enable-64-bit-bfd \
-    --enable-new-dtags  \
+../configure                        \
+    --prefix=/usr                   \
+    --build="$LFS_BLD"              \
+    --host="$LFS_TGT"               \
+    --disable-nls                   \
+    --enable-shared                 \
+    --disable-gprofng               \
+    --disable-werror                \
+    --enable-64-bit-bfd             \
+    --enable-new-dtags              \
+    --disable-gdb                   \
+    --disable-gdbserver             \
+    --disable-libdecnumber          \
+    --disable-readline              \
+    --disable-sim                   \
     --enable-default-hash-style=gnu
+
 make
 make DESTDIR="$LFS" install
 
-rm -v "$LFS"/usr/lib/lib{bfd,ctf,ctf-nobfd,opcodes,sframe}.{a,la}
+rm -vf "$LFS"/usr/lib/lib{bfd,ctf,ctf-nobfd,opcodes,sframe}.{a,la}
 
 
 # GCC - Pass 2
@@ -144,42 +303,45 @@ rm -v "$LFS"/usr/lib/lib{bfd,ctf,ctf-nobfd,opcodes,sframe}.{a,la}
 # immediately after.
 pre gcc
 
-tar -xf ../mpfr-[0-9]*.tar.xz
-mv -v mpfr-[0-9]* mpfr
-tar -xf ../gmp-[0-9]*.tar.xz
-mv -v gmp-[0-9]* gmp
-tar -xf ../mpc-[0-9]*.tar.gz
-mv -v mpc-[0-9]* mpc
+tar -xf ../mpfr-[0-9]*.tar.?z
+mv -vf mpfr-[0-9]* mpfr
+tar -xf ../gmp-[0-9]*.tar.?z
+mv -vf gmp-[0-9]* gmp
+tar -xf ../mpc-[0-9]*.tar.?z
+mv -vf mpc-[0-9]* mpc
+# tar -xf ../isl-[0-9]*.tar.?z
+# mv -vf isl-[0-9]* isl
 
 sed -i '/m64=/s/lib64/lib/' gcc/config/i386/t-linux64
 
 # TODO: Conclude whether this is necessary to patch the default interpreter
 sed -i 's,/lib64/ld-linux,/usr/lib/ld-linux,g' gcc/config/i386/linux64.h
 
-sed '/thread_header =/s/@.*@/gthr-posix.h/' \
-    -i libgcc/Makefile.in libstdc++-v3/include/Makefile.in
+sed -i '/thread_header =/s/@.*@/gthr-posix.h/' libgcc/Makefile.in libstdc++-v3/include/Makefile.in
 
 mkdir -v build
 cd       build
 
-../configure                    \
-    --build="$LFS_BLD"          \
-    --host="$LFS_TGT"           \
-    --target="$LFS_TGT"         \
-    --prefix=/usr               \
-    --with-build-sysroot="$LFS" \
-    --enable-default-pie        \
-    --enable-default-ssp        \
-    --disable-nls               \
-    --disable-multilib          \
-    --disable-libatomic         \
-    --disable-libgomp           \
-    --disable-libquadmath       \
-    --disable-libsanitizer      \
-    --disable-libssp            \
-    --disable-libvtv            \
-    --enable-languages=c,c++    \
+../configure                        \
+    --build="$LFS_BLD"              \
+    --host="$LFS_TGT"               \
+    --target="$LFS_TGT"             \
+    --prefix=/usr                   \
+    --with-build-sysroot="$LFS"     \
+    --enable-default-pie            \
+    --enable-default-ssp            \
+    --disable-nls                   \
+    --disable-multilib              \
+    --disable-fixincludes           \
+    --disable-libatomic             \
+    --disable-libgomp               \
+    --disable-libquadmath           \
+    --disable-libsanitizer          \
+    --disable-libssp                \
+    --disable-libvtv                \
+    --enable-languages=c,c++        \
     LDFLAGS_FOR_TARGET="-L$PWD/$LFS_TGT/libgcc"
+
 make
 make DESTDIR="$LFS" install
 
