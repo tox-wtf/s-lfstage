@@ -117,6 +117,7 @@ rpc: files
 
 
 # Zstd
+# NOTE: Zstd is built first to prevent it from including zlib support
 pre zstd
 
 make prefix=/usr
@@ -137,6 +138,29 @@ pre pkgconf
 make
 make install
 ln -sv pkgconf /usr/bin/pkg-config
+
+
+# NASM
+pre nasm
+
+./configure \
+            --disable-gc            \
+            --disable-gdb           \
+            --disable-debug         \
+            --disable-profiling     \
+            --disable-largefile     \
+            --disable-panic-abort   \
+            --disable-lto           \
+            --disable-sanitizer     \
+            --disable-suggestions
+make PROGS=nasm
+install -vDm755 nasm -t /usr/bin/
+
+
+# tinaries
+pre tinaries
+make clear false reset true
+make PREFIX=/usr install
 
 
 # Binutils stuff
@@ -189,21 +213,25 @@ rm -rf /usr/share/{man,info,doc}/*
 # Remove toolchain binaries
 # TODO: See if these are needed for stage 3 toolchain
 rm -vf /usr/bin/x86_64-lfs-linux-gnu-*
+rm -rf /usr/x86_64-lfs-linux-gnu
 
 # remove unused binaries and scripts
 _del=(
+    bashbug
     bits # TODO: Figure out what even provides this lol
     bomtool
+    captoinfo
     chmem
     choom
     chpasswd
+    chroot
     chrt # this isn't a realtime system
     corelist
     coresched
     cpan
     hexdump
     df
-    dmesg # it isn't useful in a stage 2
+    dmesg
     elfedit
     free
     fuser
@@ -228,6 +256,7 @@ _del=(
     makedb
     mtrace
     namei
+    nasm # only used to build tinaries
     nsenter
     pathchk
     pcprofiledump

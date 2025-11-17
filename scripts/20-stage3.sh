@@ -24,6 +24,8 @@ cp -vf "$ENVS/build.env" "$LFS/build.env"
 install -vm755 "$SCRIPT_DIR/libexec/as_chroot.sh" "$LFS/as_chroot.sh"
 
 # TODO: See if /sys and /run should be created
+# WARNING: Fun fact: bash will include '.' as an entry in $PATH if its empty,
+# which breaks gcc because of course it does
 bwrap \
     --bind "$LFS" /                         \
     --dev-bind /dev /dev                    \

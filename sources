@@ -5,7 +5,7 @@ https://ftpmirror.gnu.org/gnu/gcc/gcc-15.2.0/gcc-15.2.0.tar.xz
 https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.17.tar.xz
 https://ftpmirror.gnu.org/gnu/glibc/glibc-2.42.tar.xz
 https://ftpmirror.gnu.org/gnu/m4/m4-1.4.20.tar.xz
-https://invisible-mirror.net/archives/ncurses/current/ncurses-6.5-20250809.tgz
+https://invisible-mirror.net/archives/ncurses/current/ncurses-6.5-20251115.tgz
 https://ftpmirror.gnu.org/gnu/bash/bash-5.3.tar.gz
 https://ftpmirror.gnu.org/gnu/coreutils/coreutils-9.9.tar.xz
 https://ftpmirror.gnu.org/gnu/diffutils/diffutils-3.12.tar.xz
@@ -21,7 +21,7 @@ https://ftpmirror.gnu.org/gnu/tar/tar-1.35.tar.xz
 https://github.com/tukaani-project/xz/releases/download/v5.8.1/xz-5.8.1.tar.xz
 http://ftp.barfooze.de/pub/sabotage/tarballs/gettext-tiny-0.3.2.tar.xz
 https://ftpmirror.gnu.org/gnu/bison/bison-3.8.2.tar.xz
-https://github.com/Mic92/iana-etc/releases/download/20251022/iana-etc-20251022.tar.gz
+https://github.com/Mic92/iana-etc/releases/download/20251114/iana-etc-20251114.tar.gz
 
 https://ftpmirror.gnu.org/gnu/gmp/gmp-6.3.0.tar.xz
 https://ftpmirror.gnu.org/gnu/mpc/mpc-1.3.1.tar.gz
@@ -30,3 +30,5 @@ https://libisl.sourceforge.io/isl-0.27.tar.xz
 https://distfiles.ariadne.space/pkgconf/pkgconf-2.5.1.tar.xz
 https://github.com/zlib-ng/zlib-ng/archive/refs/tags/2.2.5.tar.gz -> zlib-ng-2.2.5.tar.gz
 https://github.com/facebook/zstd/releases/download/v1.5.7/zstd-1.5.7.tar.gz
+https://www.nasm.us/pub/nasm/releasebuilds/3.01/nasm-3.01.tar.xz
+https://github.com/tox-wtf/tinaries/archive/c925e242b7d7d5086f87da85e1e128b716d25683.tar.gz -> tinaries-c925e242.tar.gz

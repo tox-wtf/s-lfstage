@@ -102,6 +102,8 @@ sbindir=/usr/bin
 
 ../configure                        \
       --prefix=/usr                 \
+      --sbindir=/usr/bin            \
+      --libexecdir=/usr/lib         \
       --host="$LFS_TGT"             \
       --build="$LFS_BLD"            \
       --disable-nscd                \
