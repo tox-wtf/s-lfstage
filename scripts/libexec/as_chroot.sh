@@ -163,6 +163,14 @@ make clear false reset true
 make PREFIX=/usr install
 
 
+# jq
+# pre jq
+# ./configure --prefix=/usr --disable-docs --disable-static
+# make
+# make install
+# rm -vf /usr/bin/onig-config /usr/include/onig{gnu,uruma}.h /usr/lib/pkgconfig/oniguruma.pc
+
+
 # Binutils stuff
 rm -rfv /usr/lib/lib{bfd,ctf,ctf-nobfd,gprofng,opcodes,sframe}.a \
         /usr/share/doc/gprofng/
