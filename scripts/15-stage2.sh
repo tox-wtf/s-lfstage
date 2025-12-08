@@ -84,7 +84,7 @@ pre coreutils
             --disable-rpath                   \
             --disable-nls                     \
             --enable-install-program=hostname \
-            --enable-no-install-program=arch,kill,uptime,base32,b2sum,basenc,chcon,cksum,csplit,dd,df,dir,dircolors,expand,factor,false,fmt,fold,groups,hostid,join,link,logname,md5sum,nice,nl,nohup,numfmt,paste,pathchk,pinky,pr,ptx,runcon,sha224sum,sha384sum,shred,stdbuf,stty,sync,timeout,true,truncate,tsort,tty,unexpand,unlink,users,vdir,who,whoami
+            --enable-no-install-program=arch,kill,uptime,base32,b2sum,basenc,chcon,cksum,csplit,dd,df,dir,dircolors,factor,false,fmt,fold,groups,hostid,join,link,logname,md5sum,nice,nl,nohup,numfmt,paste,pathchk,pinky,pr,ptx,runcon,sha224sum,sha384sum,shred,stdbuf,stty,sync,timeout,true,truncate,tsort,tty,unlink,users,vdir,who,whoami
 
 make
 make DESTDIR="$LFS" install
