@@ -33,8 +33,8 @@ bwrap \
     --unshare-uts --hostname s-container    \
     --clearenv                              \
     --setenv TERM xterm-256color            \
-    --setenv HOME /home/_                   \
-    --setenv PATH /usr/bin:/usr/sbin        \
+    --setenv HOME /home/root                \
+    --setenv PATH /usr/bin                  \
     --setenv MAKEFLAGS "-j$(nproc)"         \
     --chdir /                               \
     /as_chroot.sh

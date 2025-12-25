@@ -45,13 +45,13 @@ nameserver 1.1.1.1
 
 # Set up users and groups
 install -vDm644 /dev/stdin /etc/passwd << .
-_:x:0:0:_:/home/_:/bin/bash
-s:x:1000:1000:s builder:/home/s:/bin/bash
+root:x:0:0:root:/home/root:/usr/bin/bash
+s:x:1000:1000:s builder:/home/s:/usr/bin/bash
 nobody:x:65534:65534:unprivileged user:/dev/null:/usr/bin/false
 .
 
 install -vDm644 /dev/stdin /etc/group << .
-_:x:0:
+root:x:0:
 wheel:x:97:
 users:x:999:
 s:x:1000:
@@ -60,8 +60,8 @@ nogroup:x:65534:
 
 
 # Install home directories
-install -o _ -vdm700 /home/_
-install -o s -vdm700 /home/s
+install -o root -vdm700 /home/root
+install -o s    -vdm700 /home/s
 
 
 # Which
