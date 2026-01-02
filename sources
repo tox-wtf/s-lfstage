@@ -5,7 +5,7 @@ http://mirror.rit.edu/gnu/gcc/gcc-15.2.0/gcc-15.2.0.tar.xz
 https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.18.tar.xz
 http://mirror.rit.edu/gnu/glibc/glibc-2.42.tar.xz
 http://mirror.rit.edu/gnu/m4/m4-1.4.20.tar.xz
-https://invisible-mirror.net/archives/ncurses/current/ncurses-6.5-20251231.tgz
+https://invisible-mirror.net/archives/ncurses/ncurses-6.6.tar.gz
 http://mirror.rit.edu/gnu/bash/bash-5.3.tar.gz
 http://mirror.rit.edu/gnu/coreutils/coreutils-9.9.tar.xz
 http://mirror.rit.edu/gnu/diffutils/diffutils-3.12.tar.xz
